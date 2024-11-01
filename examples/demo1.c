@@ -18,7 +18,11 @@ redistribute it freely
 #include <stdio.h>
 #include <string.h>
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include <spatialite/gaiaconfig-msvc.h>
+#else
 #include <spatialite/gaiaconfig.h>
+#endif
 
 /*
 these headers are required in order to support
