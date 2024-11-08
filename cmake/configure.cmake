@@ -1,8 +1,9 @@
 include(xpcfg)
+set(geosTarget xpro::geos_c)
 set(libiconvTarget xpro::libiconv)
 set(sqliteTarget xpro::SQLite3)
 set(zlibTarget xpro::zlibstatic)
-foreach(lib libiconv sqlite zlib)
+foreach(lib geos libiconv sqlite zlib)
   if(TARGET ${${lib}Target})
     get_target_property(${lib}Includes ${${lib}Target} INTERFACE_INCLUDE_DIRECTORIES)
     if(NOT "${${lib}Includes}" MATCHES "-NOTFOUND")
@@ -91,16 +92,20 @@ set(ENABLE_GEOPACKAGE TRUE) # --enable-geopackage : enables GeoPackage support
 set(ENABLE_LIBXML2 FALSE) # --enable-libxml2 : enables libxml2 inclusion # TODO find package
 set(ENABLE_MINIZIP FALSE) # --enable-minizip : enables MiniZIP inclusion # TODO find package
 set(ENABLE_RTTOPO FALSE) # --enable-rttopo : enables RTTOPO support # TODO find package
-set(GEOS_370 FALSE) # --enable-geos370 : enables GEOS 3.7.0 features # TODO find package
-set(GEOS_3100 FALSE) # --enable-geos3100 : enables GEOS 3.10.0 features # TODO find package
-set(GEOS_3110 FALSE) # --enable-geos3110 # enables GEOS 3.11.0 features # TODO find package
-set(GEOS_ADVANCED FALSE) # enable geosadvanced # TODO find package libgeos_c >= v.3.4.0
+set(GEOS_370 ${HAVE_GEOS_C_H}) # --enable-geos370 : enables GEOS 3.7.0 features
+set(GEOS_3100 ${HAVE_GEOS_C_H}) # --enable-geos3100 : enables GEOS 3.10.0 features
+set(GEOS_3110 ${HAVE_GEOS_C_H}) # --enable-geos3110 # enables GEOS 3.11.0 features
+set(GEOS_ADVANCED ${HAVE_GEOS_C_H}) # enable geosadvanced, libgeos_c >= v.3.4.0
 set(GEOS_ONLY_REENTRANT FALSE) # --with-geosonlyreentrant
-set(GEOS_REENTRANT FALSE) # --enable-geosreentrant : enables GEOS reentrant (fully thread safe)
+set(GEOS_REENTRANT ${HAVE_GEOS_C_H}) # --enable-geosreentrant : enables GEOS reentrant (fully thread safe)
 set(OMIT_EPSG FALSE) # --enable-epsg : enables full EPSG dataset support
 set(OMIT_FREEXL TRUE) # --enable-freexml : enables FreeXL inclusion
 set(OMIT_GEOCALLBACKS FALSE) # TODO search
-set(OMIT_GEOS TRUE) # --enable-geos : enables GEOS inclusion (associated with RTTOPO)
+if(HAVE_GEOS_C_H)
+  set(OMIT_GEOS FALSE) # --enable-geos : enables GEOS inclusion (associated with RTTOPO)
+else()
+  set(OMIT_GEOS TRUE)
+endif()
 if(HAVE_ICONV_H)
   set(OMIT_ICONV FALSE) # --enable-iconv : enables ICONV inclusion
 else()
