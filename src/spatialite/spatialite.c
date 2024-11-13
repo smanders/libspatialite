@@ -3071,6 +3071,7 @@ fnct_InitSpatialMetaDataFull (sqlite3_context * context, int argc,
     if (retval != 1)
 	goto error;
 
+#ifdef ENABLE_RTTOPO		/* only if RtTopo support is available */
 /* executing CreateVectorCoveragesTables() */
     sql = sqlite3_mprintf ("SELECT CreateVectorCoveragesTables()");
     retval = do_execute_sql_with_retval (sqlite, sql, &errMsg);
@@ -3078,7 +3079,6 @@ fnct_InitSpatialMetaDataFull (sqlite3_context * context, int argc,
     if (retval != 1)
 	goto error;
 
-#ifdef ENABLE_RTTOPO		/* only if RtTopo support is available */
 /* executing CreateTopoTables() */
     sql = sqlite3_mprintf ("SELECT CreateTopoTables()");
     retval = do_execute_sql_with_retval (sqlite, sql, &errMsg);
